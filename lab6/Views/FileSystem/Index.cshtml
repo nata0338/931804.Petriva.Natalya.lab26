@@ -1,0 +1,59 @@
+﻿@model FolderModel
+
+@{ 
+    ViewBag.Title = "Root"; 
+}
+<ol class="breadcrumb breadcrumb-top" style="margin-top: -20px;">
+    <li class="active">~/</li>
+</ol>
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<div class="btn-toolbar m-1" role="toolbar">
+    <div class="btn-group" role="group">
+        <a class="btn btn-primary btn-sm " asp-action="Create" asp-route-ParentId="@Model.Id"><i class="newfolder"></i> New Folder</a>      
+    </div>
+</div>
+
+<table class="table table-bordered table-striped table-top">
+    <colgroup>
+        <col style="width: 60%" />
+        <col style="width: 20%" />
+        <col style="width: 20%" />
+    </colgroup>
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Type
+            </th>
+            <th>
+                Size
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (@Model.Folders.Any()) {
+        @foreach (var folder in Model.Folders)
+        {
+            <tr>
+                <td>
+                    <a asp-action="OpenFolder" asp-route-id="@folder.Id">
+                        <i class="folder"></i>
+                        @folder.Name
+                    </a>
+                </td>
+                <td>
+                    Folder
+                </td>
+                <td>
+                    -
+                </td>
+            </tr>
+         }
+    }
+    </tbody>
+</table>
+

@@ -1,0 +1,40 @@
+﻿@model FileModel
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<ol class="breadcrumb breadcrumb-top" style="margin-top: -20px;">
+    @foreach (var folder in ViewBag.Path)
+    {
+        @if (folder.Item2 == "Root")
+        {
+            <li><a asp-controller="FileSystem" asp-action="OpenFolder" asp-route-id="@folder.Item1">~/</a></li>
+        } 
+        else
+        {
+            <li><a asp-controller="FileSystem" asp-action="OpenFolder" asp-route-id="@folder.Item1">@folder.Item2/</a></li>
+        }
+    }
+        <li class="font-weight-bold">@Model.Name</li>
+</ol>
+
+<div>
+    <h2 style="display:inline-block">@Model.Name</h2><h5 style="color:darkgrey;display:inline-block;">@Model.Extension @Model.Size bytes</h5>
+</div>
+
+<div class="btn-toolbar m-1" role="toolbar">
+    <div class="btn-group" role="group" style="margin-right:7px;">
+        <a class="btn btn-primary" asp-action="DownloadFile" asp-route-id="@Model.Id"><i class="download"></i> Download</a>
+    </div>
+    <div class="btn-group" role="group" style="margin-right:7px;">
+        <a class="btn btn-primary" asp-controller="File" asp-action="Edit"
+           asp-route-id="@Model.Id"><i class="editf"></i> Edit</a>
+        <a class="btn btn-danger" asp-controller="File" asp-action="Delete" asp-route-id="@Model.Id">
+        <i class="deletefile"></i> Delete File</a>
+    </div>
+    <div class="btn-group" role="group" style="margin-right:7px;">
+        <a class="btn btn-secondary" asp-controller="FileSystem" asp-action="OpenFolder" asp-route-id="@Model.FolderId">Back</a>
+    </div>
+</div>
+

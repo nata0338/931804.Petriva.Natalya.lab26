@@ -1,0 +1,146 @@
+﻿@model lab6.Models.TopicModel
+
+@{
+    ViewData["Title"] = "Topic";
+    var user = Context.User;
+    var dateEdited = Model.DateEdited.ToString("dddd, dd MMMM yyyy HH:mm:ss");
+}
+
+<h1>@Model.Title</h1>
+<div>
+    @if (user.Identity.IsAuthenticated)
+    {
+        <a asp-controller="Reply" asp-action="Create" 
+           asp-route-TopicId="@Model.Id" 
+           asp-route-UserId="@user.Claims.First().Value">Reply</a> <text> | </text>
+        @if (user.HasClaim("RoleId", "1") || Model.Author.Email == user.Identity.Name)
+        {
+            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) <text> | </text>
+            @Html.ActionLink("Delete", "Delete", new { id = Model.Id }); <text> | </text>
+        }
+    }
+    <a asp-action="Index">Back to @Model.Forum.Name Category</a>
+</div>
+@Html.ValidationSummary()
+<br />
+<div class="card">
+    <div class="card-header">
+        @Html.DisplayFor(item => item.Author.Email), @Model.DateCreated (edited: @dateEdited)
+        @if (user.Identity.IsAuthenticated)
+        {
+            @if ((user.HasClaim("RoleId", "1")
+               || Model.Author.Email == user.Identity.Name)
+               && Model.PictureCount < 3)
+            {
+                <input type="button" id="attc" onclick="attachToTopic(@Model.Id)"
+                       value="Attach" class="col-md-1 btn btn-outline-primary btn-sm"
+                       style="margin-left:24px;width: 120px;height:24px;font-size:12px;" />
+            }
+        }
+    </div>
+
+    <div class="card-body">
+        @Html.DisplayFor(item => item.Description)
+
+        <div class="card-columns mt-3">
+           @if (Model.PictureCount > 0)
+            {
+               @foreach (var picture in Model.Pictures)
+                {
+            <div class="card p-1 bg-light">
+                @Html.Raw("<img class=\"card-img-top\" src=\"data:image/jpeg;base64,"
+               + Convert.ToBase64String(picture.Image) + "\" alt=\"@picture.Name\" />")
+
+                <div class="card-footer bg-light m-0">
+                    @if ((user.HasClaim("RoleId", "1") || Model.Author.Email == user.Identity.Name))
+                    {
+                        <a asp-controller="FileManager" asp-action="DetachFromTopic" asp-route-TopicId="@Model.Id"
+                           asp-route-PictureName="@picture.Name"
+                           class="btn btn-outline-danger btn-sm"
+                           style="width:100%;height:29px;">Delete</a>
+                    } 
+                </div>
+            </div>
+                }
+            }
+        </div>
+    </div>
+    <div class="PictureUpload"></div>
+</div>
+
+<div class="replies">
+    @if (Model.Replies.Any())
+    {
+        <h4 class="font-weight-bold mt-4">Replies</h4>
+        @foreach (var reply in Model.Replies)
+        {
+            <div class="card mt-3 mb-3">
+                <div class="card-header">
+                    @reply.Author.Email, @reply.DateCreated (edited: @reply.DateEdited.ToString("dddd, dd MMMM yyyy HH:mm:ss"))
+                    @if (user.Identity.IsAuthenticated)
+                    {
+                        @if (user.HasClaim("RoleId", "1") || reply.Author.Email == user.Identity.Name)
+                        {
+                            @Html.ActionLink("Edit", "Edit", "Reply", new { ReplyId = @reply.Id },
+                             new{ @class = "col-md-1 btn btn-outline-primary btn-sm",
+                             @style = "margin-left:12px;width:120px;height:24px;font-size:12px;"})
+
+                             @Html.ActionLink("Delete", "Delete", "Reply", new { ReplyId = @reply.Id },
+                              new { @class="col-md-1 btn btn-outline-primary btn-sm",
+                              @style="margin-left:12px;width: 120px;height:24px;font-size:12px;"})
+
+                            @if (reply.PictureCount < 3) 
+                            {
+                                <input type="button" id="attc" onclick="attachToReply(@reply.Id)" value="Attach"
+                                       class="col-md-1 btn btn-outline-primary btn-sm" style="margin-left: 8px;
+                                       width: 120px;height:24px;font-size:12px;" />
+                            }
+                        }
+                    }
+                </div>
+
+                <div class="card-body">
+                    @reply.Text
+
+                    <div class="card-columns mt-3">
+                        @if (reply.PictureCount > 0)
+                        {
+                            @foreach (var picture in reply.Pictures)
+                            {
+                                <div class="card p-1 bg-light">
+                                    @Html.Raw("<img class=\"card-img-top\" src=\"data:image/jpeg;base64,"
+                                   + Convert.ToBase64String(picture.Image) + "\" alt=\"@picture.Name\" style=\"max-height:400px;\" />")
+
+                                    <div class="card-footer bg-light m-0">
+                                        @if ((user.HasClaim("RoleId", "1") || reply.Author.Email == user.Identity.Name))
+                                        {
+                                            <a asp-controller="FileManager" asp-action="DetachFromReply" asp-route-ReplyId="@reply.Id"
+                                               asp-route-PictureName="@picture.Name"
+                                               class="btn btn-outline-danger btn-sm"
+                                               style="width:100%;height:29px;">Delete</a>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+
+                </div>
+            </div>
+        }
+
+    }
+    else
+    {
+        @if (user.Identity.IsAuthenticated && (user.Identity.Name != Model.Author.Email))
+         {
+            <div class="text-lg-center font-italic mt-4">Be first to start the discussion.</div>
+         }
+
+}
+</div>
+
+
+
+<script src="~/js/uploadFile.js" type="text/javascript"></script>
+

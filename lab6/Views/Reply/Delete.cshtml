@@ -1,0 +1,43 @@
+﻿@model lab6.Models.ReplyModel
+
+@{
+    ViewData["Title"] = "Delete Reply";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete reply?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DateCreated)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DateEdited)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DateEdited)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Topic)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Topic.Title)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Author)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Author.Email)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete" asp-route-ReplyId="@Model.Id">
+        <input type="submit" value="Delete" class="btn btn-danger btn-sm" /> |
+        <a asp-controller="SingleForum" asp-action="OpenTopic" asp-route-TopicId="@Model.TopicId">Back</a>
+    </form>
+</div>

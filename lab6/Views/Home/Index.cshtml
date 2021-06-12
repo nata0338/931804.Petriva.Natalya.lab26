@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    var Identity = Context.User.Identity;
+}
+
+
+
+@if (Identity.IsAuthenticated) { 
+    <div class="text-center">
+        <h1 class="display-4 mt-5 mb-5">Welcome to The Forum, @Identity.Name!</h1>
+    </div>
+} else
+{
+    <div class="text-center">
+        <h1 class="display-4 mt-5 mb-5">Welcome to The Forum! Log in!</h1>
+    </div>
+}
+

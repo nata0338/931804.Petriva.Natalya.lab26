@@ -1,0 +1,56 @@
+﻿@model lab6.Models.TopicModel
+
+@{
+    ViewData["Title"] = "Delete Topic";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>All replies will be delited with the topic.</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DateCreated)
+        </dd>
+        <dt class = "col-sm-2">
+            <span>Replies</span>
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ReplyCount)
+        </dd>
+        <dt class = "col-sm-2">
+            <span class="font-weight-bold">Forum Category</span>
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Forum.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            <span class="font-weight-bold">Topic Creator</span>
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Author.Email)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back</a>
+    </form>
+</div>

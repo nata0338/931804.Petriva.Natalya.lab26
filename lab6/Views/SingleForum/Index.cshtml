@@ -1,0 +1,66 @@
+﻿@using lab6.Models
+@model ForumCategoryModel
+
+@{
+    ViewData["Title"] = "Forum";
+    var user = Context.User;
+}
+
+<h1>@Model.Name</h1>
+<h5>@Model.Description</h5>
+
+@if (user.Identity.IsAuthenticated)
+{
+    <p>
+        <a asp-action="Create" asp-route-FId="">Create New Topic</a><span>   |   <a asp-controller="ForumCategory" asp-action="Index">Back To Forum Categories</a></span>
+    </p>
+}
+else
+{
+    <span><a asp-controller="ForumCategory" asp-action="Index">Back</a></span>
+    <br />
+}
+<br />
+
+<table class="table table-bordered table-striped">
+    @foreach (var item in Model.Topics)
+    {
+        <tr>
+            <td class="align-middle">
+                <h5><a asp-action="OpenTopic" asp-route-TopicId="@item.Id">@Html.DisplayFor(modelItem => item.Title)</a></h5>            
+                <div><span class="font-weight-bold">Created by: </span> @Html.DisplayFor(modelItem => item.Author.Email)</div>
+                <div><span class="font-weight-bold">Creation date: </span> @Html.DisplayFor(modelItem => item.DateCreated)</div>
+            </td>
+            <td class="align-middle">
+                <div><span class="font-weight-bold">Replies:</span> @Html.DisplayFor(modelItem => item.ReplyCount)</div>
+                @if (user.Identity.IsAuthenticated)
+                {
+                    @if (user.HasClaim("RoleId", "1") || item.Author.Email == user.Identity.Name)
+                    {
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) <text> | </text>
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id });
+                    }
+                }
+            </td>
+            <td class="align-middle">
+                @if (item.ReplyCount == 0)
+                {
+                    <div><span class="font-weight-bold">Last reply: no replies</span></div>
+                }
+                else
+                {
+                    @if (item.LastReplyId == null)
+                    {
+                        <div><span class="font-weight-bold">Last reply: deleted</span></div>
+                    }
+                    else
+                    {
+                        <div><span class="font-weight-bold">Last reply: @Html.DisplayFor(modelItem => item.Replies.FirstOrDefault(r => r.Id == item.LastReplyId).Author.Email)</span></div>
+                        <div><span class="font-weight-bold">at: </span> @Html.DisplayFor(modelItem => item.Replies.FirstOrDefault(r => r.Id == item.LastReplyId).DateEdited)</div>
+                    }
+                }
+            </td>
+        </tr>
+    }
+</table>
+

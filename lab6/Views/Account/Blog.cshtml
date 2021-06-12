@@ -1,0 +1,66 @@
+﻿@using Microsoft.AspNetCore.Http;
+@using lab6.Models;
+@model IEnumerable<TopicModel>
+
+@{
+    ViewData["Title"] = "Blog";
+    var user = Context.User;
+}
+<h1>Posts</h1>
+
+@if (@Model.Count() == 0)
+{
+    <h4>You dont have any posts.</h4>
+}
+else if (@Model.Count() == 1)
+{
+    <h4>You have only one post.</h4>
+}
+else
+{
+    <h4>You have @Model.Count() topics posted.</h4>
+}
+
+@if (user.Identity.IsAuthenticated)
+{
+    <form method="get">
+        <input type="submit" class="btn btn-outline-primary btn-sm" asp-action="Create" value="Create New Post" />
+    </form>
+}
+<hr />
+<div class="container">
+    @foreach (TopicModel topic in Model)
+    {
+        <div class="card m-3">
+            <div class="card-header">
+                <div><span class="font-weight-bold">@topic.Author.Email</span>, @topic.DateCreated (edited: @topic.DateEdited.ToString("dddd, dd MMMM yyyy HH:mm:ss"))</div>
+            </div>
+
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tr>
+                        <td style="width: 70%;">
+                            <div>
+                                <h5 style="display: inline;">
+                                    <a asp-controller="SingleForum" asp-action="OpenTopic" asp-route-TopicId="@topic.Id" asp-route-ForumId="@topic.ForumId">@topic.Title</a>
+                                </h5> <span class="font-weight-bold"> at <a asp-controller="SingleForum" asp-action="PreIndex" asp-route-FId="@topic.ForumId"> @topic.Forum.Name</a> category.</span>
+                            </div>
+                            <span class="font-weight-bold">Replies: </span>@topic.ReplyCount
+                        </td>
+                        <td>
+                            @if (topic.ReplyCount != 0)
+                            {
+                                <div><span class="font-weight-bold">Last Reply: </span>@topic.Replies.FirstOrDefault(x => x.Id == topic.LastReplyId).Author.Email</div>
+                                <div><span class="font-weight-bold">at </span>@topic.Replies.FirstOrDefault(x => x.Id == topic.LastReplyId).DateEdited.ToString("dddd, dd MMMM yyyy HH:mm:ss")</div>
+                            }
+                            else
+                            {
+                                <span class="font-weight-bold">Nobody replied to your post yet.</span>
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    }
+</div>

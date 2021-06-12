@@ -1,0 +1,54 @@
+﻿@model lab6.Models.ReplyModel
+
+@{
+    ViewData["Title"] = "Edit Reply";
+    var user = Context.User;
+    var UserId = user.Claims.First().Value;
+    DateTime dt = DateTime.Now;
+}
+
+<h1>Edit</h1>
+<hr />
+<div>
+    <div>
+        <form asp-controller="Reply" asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span>*username* // *creation date* // *edit date*</span>
+                </div>
+                <div class="card-body">
+                    <h2><label>Reply Content</label></h2>
+                    <textarea asp-for="Text" class="form-control"></textarea>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <input hidden asp-for="Id" class="form-control" value="@Model.Id" />
+            </div>
+            <div class="form-group">
+                <input hidden asp-for="DateCreated" class="form-control" value="@Model.DateCreated" />
+            </div>
+            <div class="form-group">
+                <input hidden asp-for="TopicId" class="form-control" value="@Model.TopicId" />
+            </div>
+            <div class="form-group">
+                <input hidden asp-for="AuthorId" class="form-control" value="@Model.AuthorId" />
+            </div>
+            <div class="form-group">
+                <input hidden asp-for="PictureCount" class="form-control" value="@Model.PictureCount" />
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Edit Reply" class="btn btn-primary btn-sm mt-2" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-controller="SingleForum" asp-action="OpenTopic" asp-route-TopicId="@ViewBag.tid">Back</a>
+</div>
+

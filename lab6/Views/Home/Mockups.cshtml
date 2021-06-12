@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Mockups";
+}
+<h1>@ViewData["Title"]</h1>
+
+<div class="form-group">
+    <ul>
+        <li><a asp-controller="ForumCategory" asp-action="Index">All Forums</a></li>
+        <li><a asp-controller="Home" asp-action="RandomSingleForum">Single Forum</a></li>
+        <li><a asp-controller="Home" asp-action="RandomSingleTopic">Single Topic</a></li>
+        <li><a asp-controller="FileSystem" asp-action="Index">Files_System</a></li>
+    </ul>
+</div>

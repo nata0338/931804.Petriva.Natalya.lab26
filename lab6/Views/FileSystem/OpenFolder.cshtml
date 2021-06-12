@@ -1,0 +1,108 @@
+﻿@model FolderModel
+
+@{
+    ViewData["Title"] = Model.Name;
+    var path = ViewBag.Path;
+}
+
+<ol class="breadcrumb breadcrumb-top" style="margin-top: -20px;">
+    @foreach (var folder in ViewBag.Path)
+    {
+        @if (folder.Item2 == "Root")
+        {
+            <li><a asp-action="OpenFolder" asp-route-id="@folder.Item1">~/</a></li>
+        }
+        else if (folder.Item1 != Model.Id)
+        {
+            <li><a asp-action="OpenFolder" asp-route-id="@folder.Item1">@folder.Item2/</a></li>
+        }
+        else
+        {
+            <li><span class="font-weight-bold">@Model.Name</span></li>
+        }
+    }
+</ol>
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<div class="btn-toolbar m-1" role="toolbar">
+    <div class="btn-group" role="group" style="margin-right:10px;">
+        <a class="btn btn-primary btn-sm " asp-action="Create" asp-route-ParentId="@Model.Id"><i class="newfolder"></i> New Folder</a>
+        <a class="btn btn-primary btn-sm" asp-controller="File" asp-action="FileUpload" 
+           asp-route-FolderId="@Model.Id"><i class="newfile"></i> New File</a>
+    </div>
+    <div class="btn-group" role="group" style="margin-right:10px;">
+        <a class="btn btn-primary btn-sm" asp-action="Edit" asp-route-id="@Model.Id"><i class="editf"></i> Edit Folder</a>
+        <a class="btn btn-danger btn-sm " asp-action="Delete" asp-route-id="@Model.Id"><i class="deletefolder"></i> Delete Folder</a>
+    </div>
+</div>
+
+<table class="table table-bordered table-striped table-top">
+    <colgroup>
+        <col style="width: 60%" />
+        <col style="width: 20%" />
+        <col style="width: 20%" />
+    </colgroup>
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Type
+            </th>
+            <th>
+                Size
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td colspan="3">
+                <a asp-action="OpenFolder" asp-route-id="@Model.ParentFolderId"><i class="backfolder"></i>...</a>
+            </td>
+
+        </tr>
+        @if (@Model.Folders.Any())
+        {
+            @foreach (var folder in Model.Folders.Reverse())
+            {
+                <tr>
+                    <td>
+                        <a asp-action="OpenFolder" asp-route-id="@folder.Id">
+                            <i class="folder"></i>
+                            @folder.Name
+                        </a>
+                    </td>
+                    <td>
+                        Folder
+                    </td>
+                    <td>
+                        -
+                    </td>
+                </tr>
+            }
+        }
+        @if (@Model.Files.Any())
+        {
+            @foreach (var file in Model.Files.Reverse())
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="File" asp-action="OpenFile" asp-route-id="@file.Id" asp-route-FolderId="@file.FolderId">
+                            <i class="file"></i>
+                            @file.Name
+                        </a>
+                    </td>
+                    <td>
+                        @file.Extension
+                    </td>
+                    <td>
+                        @file.Size
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+

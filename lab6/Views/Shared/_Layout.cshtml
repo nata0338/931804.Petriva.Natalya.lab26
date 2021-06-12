@@ -1,0 +1,77 @@
+﻿@{ 
+    var Identity = Context.User.Identity;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Backend6</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/svgs.css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-dark border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand text-light" asp-area="" asp-controller="Home" asp-action="Index">Backend6</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-controller="Account" asp-action="Blog">Blog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-controller="Home" asp-action="Mockups">Mockups</a>
+                        </li>
+                    </ul>
+                </div>
+                @if (!Identity.IsAuthenticated)
+                {
+                 <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+                     <ul class="navbar-nav ml-auto">
+                         <li class="nav-item">
+                             <a class="nav-link text-light" asp-controller="Auth" asp-action="Register">Register</a>
+                         </li>
+                         <li class="nav-item">
+                             <a class="nav-link text-light" asp-controller="Auth" asp-action="LogIn">Log In</a>
+                         </li>
+                     </ul>
+                 </div>
+                }
+                else
+                {
+                <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <span class="nav-link text-light">Hello,<a class="nav-link text-light" asp-controller="Account" asp-action="Profile" style="display:inline; margin:0 0 0 -5px;">@Identity.Name</a></span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-controller="Auth" asp-action="LogOut">Log Out</a>
+                        </li>
+                    </ul>
+                </div>
+                }
+
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2021 - Backend6</div>
+    </footer>
+</body>
+</html>
